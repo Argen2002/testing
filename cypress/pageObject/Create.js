@@ -1,4 +1,4 @@
-import faker from 'faker';
+//import faker from 'faker';
 
 export class Create {
   emailField() {
@@ -38,3 +38,11 @@ export class Create {
     // Дополнительные шаги после нажатия кнопки "Добавить клиента"
   }
 }
+    // addClientButton(){return cy.get('button.clients-add-user-dialog').click();}
+    // surnameField(){return cy.get('input[formcontrolname="userSurname"]').type("genger");}
+    // nameField(){return cy.get('input[formcontrolname="userName"]').type("germinonf");}
+    // genderOption(){return cy.get('mat-radio-group > mat-radio-button:nth-child(2)').click();}
+    // emailField(){return cy.get('input[formcontrolname="email"]').type('example@example.com');}
+    // phoneField(){return cy.get('input[formcontrolname="phone"]').type('99123456789');}
+    // birthdayField(){return cy.get('input[formcontrolname="birthday"]').type('11.03.2000');}
+    // saveButton(){return    cy.get('button[name="save"]').click();}

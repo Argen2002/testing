@@ -1,13 +1,30 @@
-import {Create} from "../pageObject/Create"
+//import {Create} from "../pageObject/Create"
+import {Login} from "../pageObject/Login";
+import {Client} from "../pageObject/Client";
 
 
 describe('template ', () => {
-  const create=new Create()
+  //const create=new Create()
+  const login =new Login()
+  const client=new Client()
+
 
   it('passes', () => {
+    login.doLogin();
+    client.addClientButton().click();
 
-    create.doCreate();
-    // cy.url().should('include','clients');
+    client.fillAddClientForm();
+
+
+
+
+
+    cy.url().should('include','clients');
+
+
+
+
+
 
   })
 

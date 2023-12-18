@@ -9,10 +9,11 @@
   "author": "Argen",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
     "cypress": "^13.6.1"
   },
   "dependencies": {
-    "faker": "^6.6.6",
+    "faker": "^5.5.3",
     "pnpm": "^8.10.3"
   }
 }
