@@ -1,4 +1,5 @@
 import faker from 'faker';
+import moment from 'moment';
 
 export class Client {
   addClientButton() { return cy.get('button.clients-add-user-dialog'); }
@@ -17,9 +18,15 @@ export class Client {
     this.emailField().type(faker.internet.email());
     this.phoneField().type(`996${faker.random.number({ min: 100000000, max: 999999999 })}`);
     //this.birthdayField().type(faker.date.past().toLocaleDateString('en-GB').replace(/\//g, '.'));
-    const birthDate = faker.date.between('1983-01-01', '2003-12-31').toLocaleDateString('en-GB').replace(/\//g, '.');
+
+    // const birthDate = faker.date.between('1983-01-01', '2003-12-31').toLocaleDateString('en-GB').replace(/\//g, '/');
+    // this.birthdayField().type(birthDate);
+
+    const birthDate = moment(faker.date.between('1983-01-01', '2003-12-31')).format('MM/DD/YYYY');
     this.birthdayField().type(birthDate);
+
     this.saveButton().click();
+    cy.wait(10000);
   }
 
 }
