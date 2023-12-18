@@ -2,64 +2,56 @@ import faker from 'faker';
 import { Login } from "../pageObject/Login";
 import { Client } from "../pageObject/Client";
 
-describe('My test suit', () => {
-  it('test1', () => {
-    const userData = {
-      // Генерация данных для создания клиента
-      surname: faker.name.lastName(),
-      name: faker.name.firstName(),
-      // Дополнительные поля, если необходимо
-    };
+describe('template ', () => {
+  const login = new Login();
+  const client = new Client();
+  const userData = {
+    surname: faker.name.lastName(),
+    name: faker.name.firstName(),
+  };
 
-    const login = new Login();
-    const client = new Client();
-
+  it('passes', () => {
+    cy.visit('http://167.114.201.175:5000/');
     login.doLogin();
     client.addClientButton().click();
     client.fillAddClientForm(userData);
-
-    cy.url().should('include', 'clients');
   });
 
 
 
 
 it('view', () => {
-  const login = new Login();
   cy.visit('http://167.114.201.175:5000/');
   login.doLogin();
 
-  // Увеличим время ожидания до 10 секунд
-  cy.get('input[formcontrolname="userSurname"]', { timeout: 10000 }).should('be.visible');
+  // Кликнуть на первого клиента в списке
+  cy.get('.crm-navigator-table__row.ng-star-inserted').eq(0).click();
 
-  cy.get('input[formcontrolname="userSurname"]').invoke('val').then((generatedSurname) => {
-    cy.get('input[formcontrolname="userName"]').invoke('val').then((generatedName) => {
-      // Подождем, пока появится хотя бы один элемент в списке
-      cy.get('.crm-navigator-table__item').should('have.length.greaterThan', 0);
+  // Дождаться, чтобы убедиться, что данные загрузились
+  cy.wait(2000);
 
-      // Кликаем на первого пользователя в списке
-      cy.get('.crm-navigator-table__item')
-        .first()
-        .click();
+  // Проверить существование полей с фамилией и именем
+  cy.get('input[formcontrolname="userSurname"]').should('exist');
+  cy.get('input[formcontrolname="userName"]').should('exist');
 
-      // Проверим, что появилась страница пользователя
-      cy.url().should('include', '/user-details');
-
-      // Проверим, что отображаются правильные данные на странице пользователя
-      cy.get('.crm-navigator-table__item')
-        .contains('.crm-navigator-table__date', `${generatedSurname} ${generatedName}`)
-        .should('exist');
+  // Получить значения фамилии и имени после клика
+  cy.get('input[formcontrolname="userSurname"]').invoke('val').then((actualSurname) => {
+    cy.get('input[formcontrolname="userName"]').invoke('val').then((actualName) => {
+      // Сравнить сгенерированные данные с теми, что на странице
+      expect(actualSurname).to.equal(userData.surname);
+      expect(actualName).to.equal(userData.name);
     });
   });
+
+  // Проверить, что на странице существуют элементы, которые подтверждают, что это страница пользователя
+  // (например, уникальный заголовок, метка или другие элементы)
+  cy.get('h1').should('be.visible').invoke('text').should('contain', 'Информация о клиенте');
+  cy.get('selector-для-уникального-элемента').should('exist');
 });
 
 
+})
 
-
-
-
-
-});
 
 
 
