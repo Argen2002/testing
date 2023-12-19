@@ -4,18 +4,15 @@
 
 #  Как начать
 Установка зависимостей
-Перед запуском тестов убедитесь, что у вас установлен Node.js. Затем выполните следующие команды в терминале, находясь в корневой папке проекта:
+Перед запуском тестов убедитесь, что у вас установлен Node.js.Стяните проект -откройте его через(Pycharm,Visual Studio Code) -Затем выполните следующие команды в терминале, находясь в корневой папке проекта:
 ---
 ---
 # Установка
-bash
-Copy code
-npm install
+написать в терминале-     npm install
 Установка зависимостей из package.json
 Убедитесь, что у вас установлены все необходимые зависимости, перечисленные в файле package.json. Если не установлены, выполните следующую команду:
 
-bash
-Copy code
+
 npm install
 Запуск тестов
 Для запуска тестов выполните следующую команду:
@@ -34,82 +31,137 @@ import faker from 'faker';
 import { Login } from "../pageObject/Login";
 import { Client } from "../pageObject/Client";
 
-describe('Тест создания клиента', () => {
-  const login = new Login();
-  const client = new Client();
-  const userData = {
-    surname: faker.name.lastName(),
-    name: faker.name.firstName(),
-  };
 
-  it('проходит успешно', () => {
-    cy.visit('http://167.114.201.175:5000/');
-    login.doLogin();
-    client.addClientButton().click();
-    client.fillAddClientForm(userData);
-  });
-};
+describe('template ', () => {
+ const login = new Login();
+ const client = new Client();
+ const user = {
+   surname: faker.name.lastName(),
+   name: faker.name.firstName(),
+ };
+
+
+ it('passes', () => {
+   cy.visit('http://167.114.201.175:5000/');
+   login.doLogin();
+   client.addClientButton().click();
+   client.fillAddClientForm(user);
+ });
+
 Получилось так кратко потому что добавил в классы в pageObject-логин и  создание клиентов и просто их вызывал
+Авторизация(pageObject(class))
+export class Login{
+ emailField() {return cy.get ('input[name="userName" ]');}
+ password() {return cy.get ('input[name="password" ]');}
+ loginButton() {return cy.get ('button[type="submit"]');}
+
+
+
+
+   doLogin(email="Admin", password="Admin@Navi"){
+
+
+       cy.visit('http://167.114.201.175:5000/');
+       this.emailField().type(email);
+       this.password().type(password);
+       this.loginButton().click();
+       cy.wait(10000);
+ }
+
+
+}
+
+
+Создание клиента(pageObject(class))
 Что есть в классе создание пользователя - было сделано с помощью с fakerjs- который генерирует данные и moment для того когда выбирал :
 import faker from 'faker';
 import moment from 'moment';
 
+
 export class Client {
-  addClientButton() { return cy.get('button.clients-add-user-dialog'); }
-  surnameField() { return cy.get('input[formcontrolname="userSurname"]'); }
-  nameField() { return cy.get('input[formcontrolname="userName"]'); }
-  genderOption() { return cy.get('mat-radio-group > mat-radio-button:nth-child(2)'); }
-  emailField() { return cy.get('input[formcontrolname="email"]'); }
-  phoneField() { return cy.get('input[formcontrolname="phone"]'); }
-  birthdayField() { return cy.get('input[formcontrolname="birthday"]'); }
-  saveButton() { return cy.get('button[name="save"]'); }
+ addClientButton() { return cy.get('button.clients-add-user-dialog'); }
+ surnameField() { return cy.get('input[formcontrolname="userSurname"]'); }
+ nameField() { return cy.get('input[formcontrolname="userName"]'); }
+ genderOption() { return cy.get('mat-radio-group > mat-radio-button:nth-child(2)'); }
+ emailField() { return cy.get('input[formcontrolname="email"]'); }
+ phoneField() { return cy.get('input[formcontrolname="phone"]'); }
+ birthdayField() { return cy.get('input[formcontrolname="birthday"]'); }
+ saveButton() { return cy.get('button[name="save"]'); }
 
-  fillAddClientForm() {
-    this.surnameField().type(faker.name.lastName());
-    this.nameField().type(faker.name.firstName());
-    this.genderOption().click();
-    this.emailField().type(faker.internet.email());
-    this.phoneField().type(`996${faker.random.number({ min: 100000000, max: 999999999 })}`);
-    //this.birthdayField().type(faker.date.past().toLocaleDateString('en-GB').replace(/\//g, '.'));
 
-    // const birthDate = faker.date.between('1983-01-01', '2003-12-31').toLocaleDateString('en-GB').replace(/\//g, '/');
-    // this.birthdayField().type(birthDate);
+ fillAddClientForm(user) {
+   this.surnameField().type(user.surname);
+   this.nameField().type(user.name);
+   this.genderOption().click();
+   this.emailField().type(faker.internet.email());
+   this.phoneField().type(`996${faker.random.number({ min: 100000000, max: 999999999 })}`);
+   const birthDate = moment(faker.date.between('1983-01-01', '2003-12-31')).format('MM/DD/YYYY');
+   this.birthdayField().type(birthDate);
 
-    const birthDate = moment(faker.date.between('1983-01-01', '2003-12-31')).format('MM/DD/YYYY');
-    this.birthdayField().type(birthDate);
 
-    this.saveButton().click();
-    cy.wait(10000);
-  }
+   this.saveButton().click();
+   cy.wait(10000);
+ }
+
 
 }
+
 ---
 ---
 
 # 2. Тест просмотра последнего созданного клиента
 javascript
-it('view', () => {
-  cy.visit('http://167.114.201.175:5000/');
-  login.doLogin();
+t('view', () => {
+ cy.visit('http://167.114.201.175:5000/');
+ login.doLogin();
 
-  cy.get('.crm-navigator-table__row.ng-star-inserted').eq(0).click();
 
-  cy.wait(2000);
+ cy.get('.crm-navigator-table__row.ng-star-inserted').eq(0).click();
 
-  cy.get('input[formcontrolname="userSurname"]').should('exist');
-  cy.get('input[formcontrolname="userName"]').should('exist');
 
-  cy.get('input[formcontrolname="userSurname"]').invoke('val').then((actualSurname) => {
-    cy.get('input[formcontrolname="userName"]').invoke('val').then((actualName) => {
-      // Сравнить сгенерированные данные с теми, что на странице
-      expect(actualSurname).to.equal(userData.surname);
-      expect(actualName).to.equal(userData.name);
-    });
-  });
+ cy.wait(2000);
+
+
+ // Добавим логирование для отслеживания сгенерированных данных
+ cy.get('input[placeholder="Фамилия"]').should('exist').invoke('val').then((actualSurname) => {
+ cy.get('input[placeholder="Имя"]').should('exist').invoke('val').then((actualName) => {
+   cy.log('Generated Surname:', user.surname);
+   cy.log('Generated Name:', user.name);
+   cy.log('Actual Surname:', actualSurname);
+   cy.log('Actual Name:', actualName);
+
+
+   // Сравниваем сгенерированные данные с теми, что на странице
+   expect(actualSurname).to.equal(user.surname);
+   expect(actualName).to.equal(user.name);
+ });
+});
+
 
 ---
----
-Примечание в краце : стягиваете проект- у вас к этому времени установлен:
+—
+
+
+
+Примечание вкратце : копируете себе этот  проект- у вас к этому времени должен быть установлен:
 -nodejs
 -установка зависимостей- скопируйте этот код и подставьте в терминале-npm install.
+-Visual Studio Code/ Pycharm
+
+
+Как запустить сам проект после того как все скачали и установили
+-терминале проекта вы пишите 
+pnpm cypress open
+
+Дальше открывается окно сypress
+-Нужно выбрать первый E2E Testing 
+
+
+Дальше идет выбор браузера - советую electron-  
+
+Дальше выбираем нажимаем на сам тест кейс-spec-copy-1
+
+
+
+И дальше выполняется сам тест кейс
 
