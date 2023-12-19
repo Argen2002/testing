@@ -28,11 +28,12 @@ it('view', () => {
 
   cy.wait(2000);
 
-  cy.get('input[formcontrolname="userSurname"]').should('exist');
-  cy.get('input[formcontrolname="userName"]').should('exist');
+  cy.get('input[placeholder="Фамилия"]').should('exist');
+  cy.get('input[placeholder="Имя"]').should('exist');
 
-  cy.get('input[formcontrolname="userSurname"]').invoke('val').then((actualSurname) => {
-    cy.get('input[formcontrolname="userName"]').invoke('val').then((actualName) => {
+
+  cy.get('input[placeholder="Фамилия"]').should('exist').invoke('val').then((actualSurname) => {
+    cy.get('input[placeholder="Имя"]').should('exist').invoke('val').then((actualName) => {
       // Сравнить сгенерированные данные с теми, что на странице
       expect(actualSurname).to.equal(userData.surname);
       expect(actualName).to.equal(userData.name);
