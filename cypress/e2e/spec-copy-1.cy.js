@@ -31,17 +31,20 @@ it('view', () => {
   cy.get('input[placeholder="Фамилия"]').should('exist');
   cy.get('input[placeholder="Имя"]').should('exist');
 
-
   cy.get('input[placeholder="Фамилия"]').should('exist').invoke('val').then((actualSurname) => {
     cy.get('input[placeholder="Имя"]').should('exist').invoke('val').then((actualName) => {
-      // Сравнить сгенерированные данные с теми, что на странице
+      // Логируем значения
+      console.log('Actual Surname:', actualSurname);
+      console.log('Actual Name:', actualName);
+
+      // Сравниваем сгенерированные данные с теми, что на странице
       expect(actualSurname).to.equal(userData.surname);
       expect(actualName).to.equal(userData.name);
     });
   });
+});
 
 
- });
 
 
  })
