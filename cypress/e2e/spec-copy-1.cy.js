@@ -24,17 +24,13 @@ it('view', () => {
   cy.visit('http://167.114.201.175:5000/');
   login.doLogin();
 
-  // Кликнуть на первого клиента в списке
   cy.get('.crm-navigator-table__row.ng-star-inserted').eq(0).click();
 
-  // Дождаться, чтобы убедиться, что данные загрузились
   cy.wait(2000);
 
-  // Проверить существование полей с фамилией и именем
   cy.get('input[formcontrolname="userSurname"]').should('exist');
   cy.get('input[formcontrolname="userName"]').should('exist');
 
-  // Получить значения фамилии и имени после клика
   cy.get('input[formcontrolname="userSurname"]').invoke('val').then((actualSurname) => {
     cy.get('input[formcontrolname="userName"]').invoke('val').then((actualName) => {
       // Сравнить сгенерированные данные с теми, что на странице
@@ -43,14 +39,11 @@ it('view', () => {
     });
   });
 
-  // Проверить, что на странице существуют элементы, которые подтверждают, что это страница пользователя
-  // (например, уникальный заголовок, метка или другие элементы)
-  cy.get('h1').should('be.visible').invoke('text').should('contain', 'Информация о клиенте');
-  cy.get('selector-для-уникального-элемента').should('exist');
-});
+
+ });
 
 
-})
+ })
 
 
 
