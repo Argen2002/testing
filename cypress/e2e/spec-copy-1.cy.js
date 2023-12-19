@@ -5,7 +5,7 @@ import { Client } from "../pageObject/Client";
 describe('template ', () => {
   const login = new Login();
   const client = new Client();
-  const userData = {
+  const user = {
     surname: faker.name.lastName(),
     name: faker.name.firstName(),
   };
@@ -14,7 +14,7 @@ describe('template ', () => {
     cy.visit('http://167.114.201.175:5000/');
     login.doLogin();
     client.addClientButton().click();
-    client.fillAddClientForm(userData);
+    client.fillAddClientForm(user);
   });
 
 
@@ -28,21 +28,25 @@ it('view', () => {
 
   cy.wait(2000);
 
-  cy.get('input[placeholder="Фамилия"]').should('exist');
-  cy.get('input[placeholder="Имя"]').should('exist');
-
+  // Добавим логирование для отслеживания сгенерированных данных
   cy.get('input[placeholder="Фамилия"]').should('exist').invoke('val').then((actualSurname) => {
-    cy.get('input[placeholder="Имя"]').should('exist').invoke('val').then((actualName) => {
-      // Логируем значения
-      console.log('Actual Surname:', actualSurname);
-      console.log('Actual Name:', actualName);
+  cy.get('input[placeholder="Имя"]').should('exist').invoke('val').then((actualName) => {
+    cy.log('Generated Surname:', user.surname);
+    cy.log('Generated Name:', user.name);
+    cy.log('Actual Surname:', actualSurname);
+    cy.log('Actual Name:', actualName);
 
-      // Сравниваем сгенерированные данные с теми, что на странице
-      expect(actualSurname).to.equal(userData.surname);
-      expect(actualName).to.equal(userData.name);
-    });
+    // Сравниваем сгенерированные данные с теми, что на странице
+    expect(actualSurname).to.equal(user.surname);
+    expect(actualName).to.equal(user.name);
   });
 });
+
+
+
+});
+
+
 
 
 

@@ -11,9 +11,9 @@ export class Client {
   birthdayField() { return cy.get('input[formcontrolname="birthday"]'); }
   saveButton() { return cy.get('button[name="save"]'); }
 
-  fillAddClientForm() {
-    this.surnameField().type(faker.name.lastName());
-    this.nameField().type(faker.name.firstName());
+  fillAddClientForm(user) {
+    this.surnameField().type(user.surname);
+    this.nameField().type(user.name);
     this.genderOption().click();
     this.emailField().type(faker.internet.email());
     this.phoneField().type(`996${faker.random.number({ min: 100000000, max: 999999999 })}`);
